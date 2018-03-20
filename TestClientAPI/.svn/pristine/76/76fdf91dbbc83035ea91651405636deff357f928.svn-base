@@ -1,0 +1,15 @@
+#定位服务URL
+ZOODAC_URL=http://192.168.0.18:8080
+
+#打开警报的URL
+OPEN_ALARM_URL=
+
+#关闭警报的URL
+CLOSE_ALARM_URL=
+
+#数据库相关
+DB_URL=jdbc:mysql://112.74.203.20:3306/guankong?characterEncoding=utf8&useSSL=false
+DB_USERNAME=grid
+DB_PASSWORD=123abcABC
+DB_DRIVER=com.mysql.jdbc.Driver
+

@@ -1,0 +1,127 @@
+package com.dsw.model;
+
+public class People {
+	/**
+	 * @param planMeter
+	 *            每米/像素值
+	 * @param localX，localY
+	 *            X、Y像素值
+	 * @param zoonName
+	 *            区域名字
+	 * @param tagEuid
+	 *            设备的euid
+	 * @param zoonId
+	 *            区域Id
+	 * @param tagType
+	 *            设备类型
+	 * @param addTime
+	 *            到达位置的毫秒数
+	 */
+	private double planMeter, localX, localY;
+	private String zoonName, tagEuid;
+	private int zoonId, tagType;
+	private long addTime;
+
+	public People() {
+		super();
+	}
+
+	/**
+	 * 
+	 * @return 实际的X的米数
+	 */
+	public double getX() {
+		return this.localX * this.planMeter;
+	}
+
+	/**
+	 * 
+	 * @return 实际的Y的米数
+	 */
+	public double getY() {
+		return this.localY * this.planMeter;
+	}
+
+	public People(double planMeter, double localX, double localY, String zoonName, String tagEuid, int zoonId,
+			int tagType, long addTime) {
+		super();
+		this.planMeter = planMeter;
+		this.localX = localX;
+		this.localY = localY;
+		this.zoonName = zoonName;
+		this.tagEuid = tagEuid;
+		this.zoonId = zoonId;
+		this.tagType = tagType;
+		this.addTime = addTime;
+	}
+
+	public double getPlanMeter() {
+		return planMeter;
+	}
+
+	public void setPlanMeter(double planMeter) {
+		this.planMeter = planMeter;
+	}
+
+	public double getLocalX() {
+		return localX;
+	}
+
+	public void setLocalX(double localX) {
+		this.localX = localX;
+	}
+
+	public double getLocalY() {
+		return localY;
+	}
+
+	public void setLocalY(double localY) {
+		this.localY = localY;
+	}
+
+	public String getZoonName() {
+		return zoonName;
+	}
+
+	public void setZoonName(String zoonName) {
+		this.zoonName = zoonName;
+	}
+
+	public String getTagEuid() {
+		return tagEuid;
+	}
+
+	public void setTagEuid(String tagEuid) {
+		this.tagEuid = tagEuid;
+	}
+
+	public int getZoonId() {
+		return zoonId;
+	}
+
+	public void setZoonId(int zoonId) {
+		this.zoonId = zoonId;
+	}
+
+	public int getTagType() {
+		return tagType;
+	}
+
+	public void setTagType(int tagType) {
+		this.tagType = tagType;
+	}
+
+	public long getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(long addTime) {
+		this.addTime = addTime;
+	}
+	@Override
+	public String toString() {
+		return "People [planMeter=" + planMeter + ", localX=" + localX + ", localY=" + localY + ", zoonName=" + zoonName
+				+ ", tagEuid=" + tagEuid + ", zoonId=" + zoonId + ", tagType=" + tagType + ", addTime=" + addTime + "]";
+	}
+
+}

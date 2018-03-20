@@ -1,0 +1,25 @@
+#定位服务URL
+ZOODAC_URL=http://192.168.0.18:8080
+
+#警报的ip
+ALARM_IP=192.168.1.200
+
+#报警的端口号
+ALARM_PORT=10000
+
+#报警的路数
+ALARM_ADDRESS=1
+
+#预警房间名称
+ALARM_ROOM=133
+
+#数据库相关
+DB_URL=jdbc:mysql://192.168.0.18:3306/guankong?characterEncoding=utf8&useSSL=false
+DB_USERNAME=root
+<<<<<<< .mine
+DB_PASSWORD=mooncake0521
+=======
+DB_PASSWORD=6395530
+>>>>>>> .r13
+DB_DRIVER=com.mysql.jdbc.Driver
+

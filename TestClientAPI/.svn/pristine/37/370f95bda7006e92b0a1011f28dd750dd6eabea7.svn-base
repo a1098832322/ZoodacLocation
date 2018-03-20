@@ -1,0 +1,66 @@
+package com.dsw.thread;
+
+import com.dsw.constant.StatusCode;
+import com.dsw.dao.impl.AlarmDaoImpl;
+import com.dsw.hardware.ModbusUtil;
+import com.dsw.model.Alarm;
+import com.dsw.model.People;
+import com.dsw.util.PropUtil;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
+
+public class AlarmThread extends Thread {
+	private Alarm alarm;
+	private static final String ALARM_IP = PropUtil.getInstance().getProperty("ALARM_IP");
+	private static final int ALARM_PORT = Integer.parseInt(PropUtil.getInstance().getProperty("ALARM_PORT"));
+	private static final int ALARM_ADDRESS = Integer.parseInt(PropUtil.getInstance().getProperty("ALARM_ADDRESS"));
+
+	public AlarmThread() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public AlarmThread(Alarm alarm) {
+		// TODO Auto-generated constructor stub
+		this.alarm = alarm;
+	}
+
+	private synchronized void alarm() {
+		if (AlarmDaoImpl.getInstance().checkAlarm(alarm).equals(StatusCode.SUCCESS)) {
+			if (AlarmDaoImpl.getInstance().insertAlarm(alarm).equals(StatusCode.FAIl)) {
+				System.out.println("人员预警数据插入失败!");
+			}
+		}
+
+	}
+
+	private synchronized int checkAlarm() {
+		return ModbusUtil.readDigitalOutput(ALARM_IP, ALARM_PORT, 254, ALARM_ADDRESS);
+	}
+
+	private synchronized void openAlarm() {
+		try {
+			ModbusUtil.writeDigitalOutput(ALARM_IP, ALARM_PORT, 254, ALARM_ADDRESS, 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private synchronized void closeAlarm() {
+		try {
+			ModbusUtil.writeDigitalOutput(ALARM_IP, ALARM_PORT, 254, ALARM_ADDRESS, 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		alarm();
+		if (checkAlarm() == 0) {
+			openAlarm();
+			System.out.println("继电器被打开了！");
+		}
+	}
+
+}

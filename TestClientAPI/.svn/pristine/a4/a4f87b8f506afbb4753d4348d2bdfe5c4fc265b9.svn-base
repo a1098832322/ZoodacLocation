@@ -1,0 +1,154 @@
+package com.dsw.thread;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.dsw.thread.WebSocketClient.WebSocketReadyStatus;
+
+import com.idolink.rtls.client.api.listener.LiveStreamListener;
+
+/**
+ * 一个WebSocket的管理类， 若要连接服务请遵循以下步骤:
+ * 1、使用getInstanceManager方法，单例返回一个WebSocketManager对象； 2、使用setUrl方法给manager设置url;
+ * 3、使用setListener方法设置回调listener 4、调用connectToServer()方法连接服务器
+ * 5、使用SocketSwitchButton类的startOrSuspendWebSocketClient方法控制WebSocket线程启停
+ * 
+ * @see SocketSwitchButton
+ * @see WebSocketClient
+ * 
+ * @author 郑龙
+ *
+ */
+public class WebSocketManager extends Thread {
+	private static WebSocketClient mClient = null;
+	private static LiveStreamListener paramLiveStreamListener = null;
+	private boolean isStop = false;// 定位线程停止标识
+	private static WebSocketManager manager = new WebSocketManager();
+	/**
+	 * 一个默认的URL
+	 */
+	private String url = "http://192.168.0.18:8080";
+
+	/**
+	 * 获取url
+	 * 
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * 设置url
+	 * 
+	 * @param url
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	private WebSocketClient getWc() {
+		return mClient;
+	}
+
+	private void setWc(WebSocketClient client) {
+		mClient = client;
+		if (client != null) {
+			mClient.setUrl(url);
+		}
+	}
+
+	/**
+	 * 设置client和listener
+	 * 
+	 * @see LiveStreamListener
+	 * @see WebSocketClient
+	 * 
+	 * @param client
+	 * @param listener
+	 */
+	public void setListener(LiveStreamListener listener) {
+		paramLiveStreamListener = listener;
+	}
+
+	/**
+	 * 重新开始
+	 */
+	public void reStart() {
+		isStop = false;
+
+	}
+
+	/**
+	 * 私有化无参构造方法
+	 */
+	private WebSocketManager() {
+		super();
+	}
+
+	/**
+	 * 单例返回唯一的WebSocketManager对象
+	 * 
+	 * @return
+	 */
+	public static WebSocketManager getInstanceManager() {
+		return manager;
+	}
+
+	/**
+	 * 停止监听
+	 */
+	public void stopWebSocket() {
+		getWc().liveStreamClose();
+		// isStop = true;//注释掉此停止标记则可以模拟连接被异常关闭的情况,不注释则表示手动关闭连接，不会重新启动线程
+	}
+
+	/**
+	 * 连接上Server
+	 */
+	public void connectToServer() {
+		newAndConnecWebSocket();
+		timerCheckWebSocket();
+	}
+
+	/**
+	 * 连接Server
+	 */
+	private void newAndConnecWebSocket() {
+		if (getWc() != null) {
+			// getWc().liveStreamClose();
+			setWc(null);// 清空
+		}
+
+		/* 连接server，并显示数据 */
+		mClient = new WebSocketClient(url);
+		mClient.liveStreamOpen(paramLiveStreamListener);// 开
+	}
+
+	/**
+	 * 守护线程，当定位线程被关闭时，由此线程再次打开。
+	 */
+	private void timerCheckWebSocket() {
+		// 定时检测websocket连接状态
+		Timer dogCheckTimer = new Timer();
+		dogCheckTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				WebSocketReadyStatus readyState = getWc().getStatus();
+				if (!readyState.equals(WebSocketReadyStatus.RUN) && !isStop) {
+					System.out.println("监听线程停止，正在重启线程");
+					try {
+						newAndConnecWebSocket();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						getWc().setStatus(WebSocketReadyStatus.ERROR);
+					}
+				} else {
+					// System.out.println("监听线程正在运行");
+				}
+			}
+		}, 5000, 5000);
+	}
+
+}

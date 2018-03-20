@@ -1,0 +1,45 @@
+package com.dsw.thread;
+
+import com.dsw.constant.StatusCode;
+import com.dsw.dao.impl.PeopleDaoImpl;
+import com.dsw.model.People;
+
+/**
+ * 新开线程用于操作每个people对象关联数据库的操作
+ * 
+ * @author hlr
+ *
+ */
+public class PeopleDaoThread extends Thread {
+	private static String LOCK = "";
+	private People people;
+
+	public PeopleDaoThread(People people) {
+		this.people = people;
+	}
+
+	public PeopleDaoThread() {
+	}
+
+	/**
+	 * lock用于同步，以免保证数据完整性
+	 */
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		synchronized (LOCK) {
+			System.out.println(people.toString());
+			PeopleDaoImpl pdi = PeopleDaoImpl.getInstance();
+			if (pdi.checkPeopleStatus(people.getTagEuid())) {
+				System.out.println(pdi.checkFinalPeopleAddr(people.getTagEuid(), people.getZoonName()));
+				if (pdi.checkFinalPeopleAddr(people.getTagEuid(), people.getZoonName())) {
+					if (!pdi.insertPeopleAddr(people).equals(StatusCode.SUCCESS)) {
+						System.out.println("人员数据插入失败!");
+					}
+				}
+			}
+		}
+	}
+	
+	
+}

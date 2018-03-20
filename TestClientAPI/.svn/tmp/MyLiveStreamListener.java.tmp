@@ -1,0 +1,53 @@
+package com.dsw.test;
+
+import com.dsw.constant.PeopleStatusCode;
+import com.dsw.dao.impl.PeopleDaoImpl;
+import com.dsw.model.People;
+import com.dsw.thread.PeopleDaoThread;
+import com.dsw.util.PackageUtil;
+import com.idolink.rtls.client.api.listener.LiveStreamListener;
+import com.idolink.rtls.client.api.vo.LiveStreamError;
+import com.idolink.rtls.client.api.vo.LiveStreamPosition;
+import com.zl.jydam.controller.AlarmListener;
+
+public class MyLiveStreamListener implements LiveStreamListener {
+
+	/**
+	 * 
+	 */
+	@Override
+	public void liveStreamPosition(LiveStreamPosition paramLiveStreamPosition) {
+<<<<<<< .mine
+		try {
+			People people = PackageUtil.getPeople(paramLiveStreamPosition);
+			System.out.println(people);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+=======
+		if (paramLiveStreamPosition.getErrorCase() == 0) {
+			People people = PackageUtil.getPeople(paramLiveStreamPosition);
+			System.out.println(people.getZoonName());;
+			try {
+				PeopleDaoThread peopleThread = new PeopleDaoThread(people);
+				peopleThread.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+>>>>>>> .r9
+	}
+
+	@Override
+	public void liveStreamError(LiveStreamError paramLiveStreamError) {
+
+	}
+
+	@Override
+	public void liveStreamPlayback(LiveStreamPosition paramLiveStreamPosition) {
+		System.out.println("liveStreamPlayback");
+	}
+
+}

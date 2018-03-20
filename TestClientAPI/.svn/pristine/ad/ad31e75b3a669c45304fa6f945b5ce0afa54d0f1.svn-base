@@ -1,0 +1,126 @@
+package com.dsw.thread;
+
+import com.idolink.rtls.client.api.RTLSLiveStream;
+import com.idolink.rtls.client.api.listener.LiveStreamListener;
+
+/**
+ * 一个用于连接智物达Web端的Client (使用修改了一丢丢的WebSocket客户端)
+ * 
+ * @author 郑龙
+ *
+ */
+public class WebSocketClient {
+	/**
+	 * 一个默认的URL
+	 */
+	private String url = "http://192.168.0.18:8080";
+
+	/**
+	 * WebSocket连接状态们
+	 * 
+	 * @author 郑龙
+	 *
+	 */
+	enum WebSocketReadyStatus {
+		RUN, CLOSE, ERROR, NULL
+	};
+
+	/**
+	 * WebSocket写入流
+	 */
+	private static RTLSLiveStream stream = null;
+
+	/**
+	 * WebSocket连接状态码
+	 */
+	private static WebSocketReadyStatus status = WebSocketReadyStatus.NULL;
+
+	/**
+	 * 获取客户端写入流
+	 * 
+	 * @return
+	 */
+	public static RTLSLiveStream getClient() {
+		return stream;
+	}
+
+	/**
+	 * 设置RTLS读取流客户端
+	 * 
+	 * @param stream
+	 */
+	public static void setClient(RTLSLiveStream stream) {
+		WebSocketClient.stream = stream;
+	};
+
+	/**
+	 * 获取WebSocket连接状态
+	 * 
+	 * @return WebSocketReadyStatus
+	 */
+	public static WebSocketReadyStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * 获取url
+	 * 
+	 * @return url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * 设置url
+	 * 
+	 * @param url
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * 默认构造方法
+	 */
+	public WebSocketClient() {
+		super();
+	}
+
+	/**
+	 * 使用url构造的构造方法
+	 */
+	public WebSocketClient(String url) {
+		super();
+		this.url = url;
+	}
+
+	/**
+	 * 开启监听监听写入流
+	 * 
+	 * @param url
+	 * @param listener
+	 */
+	public void liveStreamOpen(LiveStreamListener listener) {
+
+		if (stream == null) {
+			stream = new RTLSLiveStream("ws://" + this.url.replaceAll("http://", "") + "/rtls/socket");
+		}
+		stream.connect();
+		while (!stream.isConnected())
+			;
+		stream.subscribe("/queue/position", listener);
+		status = WebSocketReadyStatus.RUN;// socket运行
+	}
+
+	/**
+	 * 关闭监听写入流
+	 */
+	public void liveStreamClose() {
+		if (stream != null) {
+			stream.close();
+		}
+		status = WebSocketReadyStatus.CLOSE;// 线程停止
+	}
+
+}

@@ -1,0 +1,13 @@
+package com.dsw.test;
+
+import com.dsw.dao.impl.RoomDaoImpl;
+import com.dsw.httpclient.OkhttpClient;
+import com.dsw.thread.SocketSwitchButton;
+
+public class Test {
+
+	public static void main(String[] args) throws InterruptedException {
+		
+	}
+
+}

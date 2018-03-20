@@ -1,0 +1,33 @@
+package com.dsw.test;
+
+import com.dsw.thread.WebSocketManager;
+
+/**
+ * 测试一些socket接口用的类
+ * 
+ * @author 郑龙
+ *
+ */
+public class TestAPI {
+
+	public static void main(String[] args) throws InterruptedException {
+		String url = "http://192.168.0.18:8080";
+		WebSocketManager manager = WebSocketManager.getInstanceManager();// new一个新的manager对象
+		manager.setUrl(url);
+
+		MyLiveStreamListener listener = new MyLiveStreamListener();// new一个listener
+		manager.setListener(listener);// 给manager设置client和listener
+		manager.connectToServer();// 连接server
+
+		// for (int i = 0; i < 10; i++) {
+		// Thread.sleep(10000);// 15秒后定位线程暂停
+		// SocketSwitchButton button = new SocketSwitchButton();
+		// button.startOrSuspendWebSocketClient(true);
+		// System.out.println("\n\n\n定位线程暂停！");
+		//
+		// Thread.sleep(5000);// 10秒后线程重新启动
+		// button.startOrSuspendWebSocketClient(false);
+		// }
+	}
+
+}

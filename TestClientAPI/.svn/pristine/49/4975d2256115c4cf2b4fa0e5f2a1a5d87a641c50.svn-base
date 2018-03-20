@@ -1,0 +1,5 @@
+package com.dsw.constant;
+
+public enum PeopleStatusCode {
+	SUCCESS, FAIl
+}

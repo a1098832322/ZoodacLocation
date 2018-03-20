@@ -1,0 +1,27 @@
+package com.dsw.test;
+
+import com.dsw.model.People;
+import com.dsw.util.PackageUtil;
+import com.idolink.rtls.client.api.listener.LiveStreamListener;
+import com.idolink.rtls.client.api.vo.LiveStreamError;
+import com.idolink.rtls.client.api.vo.LiveStreamPosition;
+import com.zl.jydam.controller.AlarmListener;
+
+public class MyLiveStreamListener implements LiveStreamListener {
+
+	@Override
+	public void liveStreamPosition(LiveStreamPosition paramLiveStreamPosition) {
+		People people = PackageUtil.getPeople(paramLiveStreamPosition);
+	}
+
+	@Override
+	public void liveStreamError(LiveStreamError paramLiveStreamError) {
+
+	}
+
+	@Override
+	public void liveStreamPlayback(LiveStreamPosition paramLiveStreamPosition) {
+		System.out.println("liveStreamPlayback");
+	}
+
+}

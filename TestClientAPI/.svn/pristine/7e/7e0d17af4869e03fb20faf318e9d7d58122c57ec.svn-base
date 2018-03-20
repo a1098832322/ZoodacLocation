@@ -1,0 +1,24 @@
+package com.dsw.test;
+
+import com.idolink.rtls.client.api.RTLSClient;
+import com.idolink.rtls.client.api.RTLSClientService;
+import com.idolink.rtls.client.api.listener.LiveStreamListener;
+import com.zl.jydam.controller.AlarmListener;
+
+public class TestAPI {
+
+	public static void main(String[] args) {		
+		// 输入服务器的IP
+		String url = "http://192.168.0.18:8080";
+		RTLSClient client = new RTLSClientService(url);
+		// 定义一个XXXlistener,实现LiveStreamListener接口
+		System.out.println("Start LiveStreamListener");
+		LiveStreamListener paramLiveStreamListener = new MyLiveStreamListener();
+		client.liveStreamPostion(paramLiveStreamListener);
+		// client.liveStreamError(paramLiveStreamListener);
+		// client.liveStreamPlayback(paramLiveStreamListen000000er);
+		System.out.println("End LiveStreamListener");
+		// 然后在XXXlistener的方法中就可以获取到对应的信息
+	}
+
+}
